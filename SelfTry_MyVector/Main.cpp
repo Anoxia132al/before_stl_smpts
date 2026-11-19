@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <cassert>  //  assert()
 #include "MyVector.h"
 
 using std::cout;
@@ -17,7 +19,7 @@ int main ()
         std::cout << vec1[i] << ' ';
     }
     std::cout << '\n';
-    std::cout << "=======================" << std::endl;
+    std::cout << "=======================" << '\n';
     
 
     MyVector<int> vec2 (vec1);
@@ -27,8 +29,10 @@ int main ()
         std::cout << vec2[i] << ' ';
     }
     std::cout << '\n';
-    std::cout << "=======================" << std:: endl;
-    
+    std::cout << "=======================" << '\n';
+
+    vec2[0] = 999;
+    assert(vec1[0] == 0);   // 深拷贝的证明
 
     MyVector<int> vec3 = vec1;
     cout << "vec3 : ";
@@ -50,7 +54,7 @@ int main ()
 
     vec3.clear();
     cout << vec3.size() << " " << vec3.capacity() << '\n';
-    cout << "=======================" << std::endl;
+    cout << "=======================" << '\n';
 
 
     MyVector<int> v;
@@ -63,5 +67,13 @@ int main ()
     const MyVector<int>& cv = v;
     for (int x : cv) sum2 += x;
     cout << "sum2 = " << sum2 << '\n';
+
+
+    MyVector<double> dv;
+    dv.push_back(3.14);
+
+    MyVector<std::string> sv;
+    sv.push_back("hello");
+
     return 0;
 }

@@ -6,37 +6,38 @@
 template <typename T>
 class MyVector
 {
-public :
+public:
     //  构造函数
     MyVector ();
     //  explicit 防止隐式类型转换
-    explicit MyVector (size_t initCapacity);
+    explicit MyVector (std::size_t initCapacity);
     MyVector (const MyVector& other);   //  用已有容器创建一份独立副本
     MyVector& operator= (MyVector other);
     //  析构函数
     ~MyVector ();   //  释放堆内存
 
-    size_t size () const;   // 功能：返回有效元素个数
-    size_t capacity () const;   //  功能：返回当前已分配能装多少个
+    std::size_t size () const;   // 功能：返回有效元素个数
+    std::size_t capacity () const;   //  功能：返回当前已分配能装多少个
     bool empty () const;
     void clear ();
 
     //  C++ 内置运算符默认只认 int 等基本类型
     //  operator 重载 [] 运算符，让 vec[0] 能访问元素
-    T& operator[] (size_t i);
+    T& operator[] (std::size_t i);
+    const T& operator[] (std::size_t i) const;
 
-    void push_back (T value); // 功能：尾部追加；满了先扩容再放
+    void push_back (const T& value); // 功能：尾部追加；满了先扩容再放
     void pop_back ();   // 功能：删除尾部元素
 
     T* begin ();
-    T* begin() const;
+    const T* begin() const;
     T* end ();
-    T* end() const;
+    const T* end() const;
 
-private :
+private:
     T* data_;
-    size_t size_;
-    size_t capacity_;    //  已分配总空间
+    std::size_t size_;
+    std::size_t capacity_;    //  已分配总空间
 };
 
 
@@ -45,7 +46,7 @@ MyVector<T>::MyVector ()
     : data_(nullptr), size_(0), capacity_(0) {}
 
 template <typename T>
-MyVector<T>::MyVector (size_t initCapacity)
+MyVector<T>::MyVector (std::size_t initCapacity)
     : data_(nullptr), size_(0), capacity_(0)
 {
     if (initCapacity == 0)  return;
@@ -66,20 +67,20 @@ MyVector<T>::MyVector (const MyVector& other)
     if (other.size_ == 0) return;
     else
     {
-        data_ = new T[other.capacity_];
-        for (T i = 0; i != other.size_; ++i)
+        data_ = new T[other.size_];
+        for (std::size_t i = 0; i != other.size_; ++i)
         {
             data_[i] = other.data_[i];
         }
         size_ = other.size_;
-        capacity_ = other.capacity_;
+        capacity_ = other.size_;
     }
 }
 
-// MyVector& MyVector::operator= (MyVector other)
+// MyVector<T>& MyVector<T>::operator= (MyVector other)
 // {
 //     T* newData = new T[other.capacity_];
-//     for (T i = 0; i != other.size_; ++i)
+//     for (std::size_t i = 0; i != other.size_; ++i)
 //     {
 //         newData[i] = other.data_[i];
 //     }
@@ -100,24 +101,26 @@ MyVector<T>& MyVector<T>::operator= (MyVector other)
 }
 
 template <typename T>
-T& MyVector<T>::operator[] (size_t i) { return data_[i]; }
+T& MyVector<T>::operator[] (std::size_t i) { return data_[i]; }
+template <typename T>
+const T& MyVector<T>::operator[] (std::size_t i) const { return data_[i]; }
 
 template <typename T>
-size_t MyVector<T>::size () const { return size_; }
+std::size_t MyVector<T>::size () const { return size_; }
 template <typename T>
-size_t MyVector<T>::capacity () const { return capacity_; }
+std::size_t MyVector<T>::capacity () const { return capacity_; }
 template <typename T>
 bool MyVector<T>::empty () const { return size_ == 0; }
 
 template <typename T>
-void MyVector<T>::push_back (T value)
+void MyVector<T>::push_back (const T& value)
 {
     if (size_ == capacity_)
     {
-        size_t newcapacity = (capacity_ == 0 ? 1 : capacity_ * 2);
+        std::size_t newcapacity = (capacity_ == 0 ? 1 : capacity_ * 2);
 
         T* newData = new T[newcapacity];
-        for (T i = 0; i != size_; ++i)
+        for (std::size_t i = 0; i != size_; ++i)
         {
             newData[i] = data_[i];
         }
@@ -136,9 +139,9 @@ void MyVector<T>::clear () { size_ = 0; }
 template <typename T>
 T* MyVector<T>::begin () { return data_; }
 template <typename T>
-T* MyVector<T>::begin () const { return data_; }
+const T* MyVector<T>::begin () const { return data_; }
 template <typename T>
 T* MyVector<T>::end () { return data_ + size_; }
 template <typename T>
-T* MyVector<T>::end () const { return data_ + size_; }
+const T* MyVector<T>::end () const { return data_ + size_; }
 
